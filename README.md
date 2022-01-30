@@ -1,3 +1,5 @@
+Hello, wire-cell-cfg!
+
 #+TITLE: Wire Cell Toolkit Configuration
 
 * What is here
