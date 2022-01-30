@@ -1,0 +1,44 @@
+#+title: Wire-Cell Toolkit Reference Configuration for MicroBooNE 
+
+* Overview
+
+This area provides reference WCT configuration for MicroBooNE-specific
+but otherwise generic/unspecified jobs.  The configuration extends the
+general reference configuration and may provide a basis or example for
+further extension for specific jobs.
+
+Conventions:
+
+ - "main" configuration files intended for consumption by UI are named
+   ~wct-*~ for ~wire-cell~ command line consumption and ~wcls-~ for
+   consumption by the WC/LS interface module and tool provided by the
+   ~larwirecell~ package.
+
+ - the remainder of the "main" file name is made up as an abbreviation
+   for the top level pipeline.
+
+* Tour of mains
+
+- [[./wct-sim-ideal-sn-nf-sp.jsonnet]] :: configure for WCT signal/noise simulation using ideal line tracks and then run NF and SP
+
+- [[./wcls-sim-nf-sp.jsonnet]] :: configure for WC/LS signal/noise simulation using depos from ~art::Event~ and then run NF and SP.  This is expected to be referenced in [[./wcls-sim-nf-sp.fcl]] (or similar).
+
+- [[./wcls-data-nf-sp.jsonnet]] :: configure to run NF + SP on ~raw::RawDigit~ from ~art::Event~. This is expected to be referenced in [[./wcls-data-nf-sp.fcl]] (or similar).  Not in particular the options available for setting in that FHiCL file:
+
+  - for "dynamic" configuration of NF via larsoft services as well as
+    run-dependent static configuration you must simultaneously add
+    ~wclsMultiChannelNoiseDB~ to the list of ~inputers~ and set the
+    ~epoch~ to ~dynamic~.  For such a job to work your environment
+    must include the /art/ service ~geo::Geometry~ which is not
+    available in a base-~larsoft~ environment.
+
+  - for all other epochs ("before", "after" or "perfect") there is no
+    need for ~geo::Geometry~ or other larsoft services and the
+    ~wclsMultiChannelNoiseDB~ must *not* be listed in the ~inputers~
+    list.
+
+
+- [[./wcls-sim-drift.jsonnet]] :: (and [[./wcls-sim-drift.fcl][fcl]]) a partial example config for a
+     small job that takes in depos from ~art::Event~, drifts them, and
+     then converts them to ~sim::SimChannel~'s and saves the result
+     back to ~art::Event~

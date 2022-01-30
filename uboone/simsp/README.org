@@ -1,0 +1,55 @@
+#+title: WCT Simulation + Signal Processing Configuration
+
+* Overview
+
+This directory holds an example of WCT configuration which supports
+signal and noise simulation followed by signal processing.  It
+supports a number of possible high-level choices:
+
+- insertion of software noise filtering
+- variation of field responses (eg to emulate and correct microboone's shorted wires)
+- variation of electronics response (eg to emulate and correct microboone's misconfigured channels)
+- command line running or running from inside /art/ 
+
+* Configuration structure
+
+This configuration makes use of the new ~pnode~ paradigm described in
+[[https://wirecell.github.io/news/posts/pgrapher-configuration-improvements/][this Wire-Cell news post]] to provide a layered configuration.  From
+top-down these layers are as follows.
+
+** Main files
+
+The Jsonnet files which are suitable to give to WCT are named like
+~main-*.jsonnet~.  They aggregate results from the lower layers in
+order to provide the final configuration sequence.
+
+** Globals
+
+The next layer down are some "global" information that may be used by
+all layers.  This layer is populated by two special files:
+
+- [[./params.jsonnet]] a data structure holding parameters that tend to be
+  used by many components.  
+
+- [[./common.jsonnet]] provides a number of configuration data structures
+  for "tool" components that are shared by several other components.
+
+** Pipeline elements
+
+The "main" layer largely builds a final linear pipeline.  The elements
+of this pipeline are ~pnode~ instances which have a single input and a
+single output.  The pipeline element files provide a set of possible
+elements to choose inside the "main", each of which cover some general
+aspect of a job.  The pipeline element files are:
+
+- [[./sim.jsonnet]] simulation 
+- [[./nf.jsonnet]] noise filter
+- [[./sp.jsonnet]] signal processing
+
+** All the rest
+
+The lowest layer contains files written in support of the pipeline
+element files.  They tend to be named after the component that they
+provide variants of configurations for but otherwise follow no fixed
+patterns.
+

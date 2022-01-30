@@ -1,0 +1,47 @@
+process_name: wclssig2img
+
+
+source: {
+   module_type: RootInput
+   saveMemoryObjectThreshold: 10485760
+
+   #inputCommands: ["drop *", "keep raw::RawDigits_*_*_*"]
+   #inputCommands: ["drop *", "keep *_*_*_Swizzler"]
+}
+
+physics :{
+   producers: {
+
+      sig2img : {
+         module_type : WireCellToolkit
+         wcls_main: {
+            tool_type: WCLS
+            apps: ["Pgrapher"]
+
+            logsinks: ["stderr:info", "wcls-sig-to-img.log:trace"]
+            loglevels: ["trace", "raygrid:trace", "pgraph:info"]
+
+            plugins: ["WireCellGen", "WireCellImg", "WireCellPgraph", "WireCellSio", "WireCellRoot", "WireCellLarsoft"]
+
+            inputers: ["wclsCookedFrameSource:sigs" ]
+
+            outputers: []
+
+            configs: ["pgrapher/experiment/pdsp/wcls-sig-to-img.jsonnet"]
+
+            params : {
+               // This locates the input raw::RawDigit collection in the art::Event 
+               sig_input_label: "raw2sig:gauss"
+
+               // do the BlobReframer
+               use_blob_reframer: "false"
+            }
+         }
+      }
+   }
+
+   p1 : [ sig2img ]
+   trigger_paths : [ p1 ]
+   
+}
+
